@@ -1,5 +1,7 @@
 # Lawyer's Diary
 
+![Lawyer's Diary — hearing planner project banner](assets/lawyers-diary-banner.png)
+
 A mini DBMS project for keeping track of a lawyer's court hearings and client matters. It uses PHP and MySQL on the server, with HTML5, CSS3, and JavaScript in the browser. The JavaScript Fetch API sends Ajax requests so diary changes appear without reloading the page.
 
 ## Features
