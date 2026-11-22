@@ -31,3 +31,42 @@ footer{text-align:center;padding:20px 0 24px;color:#877460;font-size:10px}footer
 @media(max-width:980px){.main-content{padding:0 18px}.book-spread{grid-template-columns:minmax(0,1.35fr) minmax(250px,.85fr)}.page{padding-left:23px;padding-right:23px}.page-main{padding-right:34px}.page-side{padding-left:34px}.book-spread:before{left:62.5%}}
 @media(max-width:720px){.topbar{height:72px}.top-actions{gap:10px}.top-actions #todayLabel{font-size:10px}.book-spread{grid-template-columns:1fr;margin-top:20px;padding:9px}.book-spread:before{display:none}.page{min-height:auto;padding:24px 18px}.page-main{border-radius:5px 5px 2px 2px;padding-bottom:18px}.page-side{border-radius:2px 2px 5px 5px;border-top:7px solid #d6c7b5}.page-note{position:static;text-align:right;margin:17px 0 0}.toolbar{flex-wrap:wrap}.search-box{flex-basis:100%}.toolbar select,.toolbar>input{flex:1;max-width:none}.table-wrap{margin-right:-8px}.page-heading{margin-bottom:15px}h1{font-size:23px}}
 @media(max-width:430px){.main-content{padding:0 10px}.brand{font-size:16px}.brand-mark{width:34px;height:34px}.top-actions #todayLabel{display:none}.page{padding:21px 12px}.page-main{padding-right:12px}.page-side{padding-left:17px;padding-right:17px}.modal{padding:20px 15px}.form-grid{grid-template-columns:1fr}.form-grid .full{grid-column:auto}}
+
+/* Readable type and consistent alignment */
+.top-actions{font-size:13px;align-items:center}
+.button{font-size:14px;min-height:42px;display:inline-flex;align-items:center;justify-content:center}
+.brand{font-size:21px}
+.eyebrow{font-size:10px}
+h1{font-size:30px}
+h2{font-size:24px}
+.page-heading{align-items:center}
+.toolbar{min-height:40px;align-items:center}
+.search-box{height:40px}
+.search-box input{font-size:13px}
+.toolbar select,.toolbar>input{height:40px;font-size:12px}
+table th,table td{vertical-align:middle}
+th{font-size:10px}
+td{font-size:12px}
+.date-sub,.client-sub{font-size:11px}
+.status-pill{font-size:10px;padding:5px 8px}
+.icon-button{font-size:12px;padding:6px}
+.table-footer{font-size:11px}
+.date-stamp b{font-size:13px}
+.date-stamp small{font-size:11px}
+.quick-counts span{font-size:11px}
+.quick-counts strong{font-size:23px}
+.next-date{font-size:11px}
+.next-client{font-size:14px}
+.next-case,.next-empty{font-size:11px}
+.page-note{font-size:12px}
+footer{font-size:11px}
+.form-grid label{font-size:12px}
+.form-grid input,.form-grid select,.form-grid textarea{font-size:13px}
+.modal h2{font-size:24px}
+.text-button{font-size:12px}
+@media(max-width:720px){
+  .top-actions #todayLabel{font-size:11px}
+  .toolbar select,.toolbar>input{height:40px}
+  th{font-size:9px}
+  td{font-size:11px}
+}
