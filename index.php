@@ -13,10 +13,29 @@ try { db()->query('SELECT 1 FROM diary_entries LIMIT 1'); } catch (Throwable $er
   <link rel="stylesheet" href="assets/style.css">
 </head>
 <body>
-<main class="main-content">
+<section class="landing" id="landing">
+  <div class="closed-book" id="closedBook">
+    <div class="cover-inner">
+      <div class="cover-mark">LD</div>
+      <div class="eyebrow">A PERSONAL COURT PLANNER</div>
+      <h1>Lawyer's Diary</h1>
+      <p>Keep every hearing in one place.</p>
+      <form id="lawyerForm">
+        <label for="lawyerNameInput">Lawyer's name</label>
+        <input id="lawyerNameInput" name="name" maxlength="120" required placeholder="Enter your name" autocomplete="name">
+        <button class="button cover-button" id="openDiaryButton" type="submit">Open diary <span>&rarr;</span></button>
+      </form>
+      <div class="cover-help">Enter your name to open or create your diary.</div>
+    </div>
+    <div class="page-turn" aria-hidden="true"></div>
+  </div>
+  <div class="landing-error" id="lawyerError" role="alert"></div>
+</section>
+
+<main class="main-content" id="workspace" hidden>
   <header class="topbar">
-    <a class="brand" href="#"><span class="brand-mark">LD</span><span>Lawyer's Diary<small>HEARING PLANNER</small></span></a>
-    <div class="top-actions"><span id="todayLabel"></span><button class="button primary" id="addEntryBtn"><span>+</span> Add hearing</button></div>
+    <a class="brand" href="#"><span class="brand-mark">LD</span><span>Lawyer's Diary<small id="currentLawyerName">HEARING PLANNER</small></span></a>
+    <div class="top-actions"><span id="todayLabel"></span><button class="button change-button" id="changeLawyerBtn" type="button">Change lawyer</button><button class="button primary" id="addEntryBtn" type="button"><span>+</span> Add hearing</button></div>
   </header>
   <?php if (!$databaseReady): ?><div class="setup-alert">Database not connected. Check the database settings in <code>config.php</code>.</div><?php endif; ?>
   <section class="book-spread" aria-label="Hearing diary">

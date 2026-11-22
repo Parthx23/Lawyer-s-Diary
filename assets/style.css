@@ -70,3 +70,21 @@ footer{font-size:11px}
   th{font-size:9px}
   td{font-size:11px}
 }
+
+/* Closed diary and simple lawyer selection */
+.landing[hidden]{display:none}
+.landing{min-height:100vh;display:grid;place-items:center;padding:28px 18px;background:radial-gradient(ellipse at 50% 15%,#fff9ed 0,transparent 44%),linear-gradient(135deg,#e9dfcf,#d9c8b2);overflow:hidden}
+.closed-book{position:relative;width:min(450px,92vw);min-height:590px;padding:13px;border:1px solid #493021;border-radius:12px 18px 18px 12px;background:linear-gradient(105deg,#294231,#3d5b43 22%,#324a37 100%);box-shadow:15px 18px 0 #d3c0a8,20px 24px 35px #57412c55,inset 5px 0 7px #162b1f;transform-origin:left center}
+.closed-book:before{content:"";position:absolute;z-index:0;top:8px;bottom:8px;right:-11px;width:15px;border-radius:0 8px 8px 0;background:repeating-linear-gradient(to bottom,#f9f2e7 0,#f9f2e7 3px,#e5d8c6 4px,#f9f2e7 6px)}
+.cover-inner{position:relative;z-index:2;min-height:562px;border:1px solid #879174;border-radius:7px 12px 12px 7px;padding:49px 38px 34px;display:flex;flex-direction:column;align-items:center;text-align:center;color:#f5eddd;background:linear-gradient(135deg,#38543d,#2d4734 70%,#263d2d);box-shadow:inset 0 0 0 5px #314a35,inset 0 0 0 6px #718066}
+.cover-mark{width:53px;height:53px;margin-bottom:28px;border:1px solid #c6a879;border-radius:50%;display:grid;place-items:center;color:#e1c494;font:600 15px var(--serif);letter-spacing:1px}
+.cover-inner .eyebrow{color:#d2bd99}.cover-inner h1{margin:10px 0 7px;color:#f7f0e3;font-size:33px}.cover-inner p{margin:0;color:#d8d0c0;font:13px var(--sans)}
+.cover-inner form{width:100%;max-width:300px;margin-top:43px;text-align:left}.cover-inner label{display:block;margin-bottom:8px;color:#e7decf;font-size:12px;font-weight:600}.cover-inner input{width:100%;height:44px;padding:0 12px;border:1px solid #b2a187;border-radius:4px;background:#fbf7ee;color:#30251e;font:14px var(--sans);outline:none}.cover-inner input:focus{box-shadow:0 0 0 3px #d8c39a55;border-color:#d1b77f}.cover-button{width:100%;height:44px;margin-top:11px;background:#b9955f;color:#fffaf0;font-size:14px}.cover-button:hover{background:#c5a575}.cover-button span{margin-left:8px;font-size:17px}.cover-help{margin-top:18px;color:#d5cbb9;font-size:11px}
+.page-turn{position:absolute;z-index:1;top:16px;right:11px;bottom:16px;width:74%;border-radius:3px 9px 9px 3px;background:repeating-linear-gradient(to bottom,#fbf8ef 0,#fbf8ef 28px,#e9e2d7 29px,#fbf8ef 30px);transform-origin:left center;opacity:0;box-shadow:3px 0 8px #17271b44}
+.closed-book.opening{animation:diaryOpen .9s cubic-bezier(.25,.72,.28,1) forwards}
+.closed-book.opening .page-turn{animation:turnPage .75s ease-in-out forwards}
+@keyframes turnPage{0%{transform:rotateY(0);opacity:0}20%{opacity:1}100%{transform:rotateY(-145deg);opacity:0}}
+@keyframes diaryOpen{0%{transform:perspective(1100px) rotateY(0) scale(1);opacity:1}50%{transform:perspective(1100px) rotateY(-14deg) scale(.98);opacity:1}100%{transform:perspective(1100px) rotateY(-88deg) translateX(-55px) scale(.9);opacity:0}}
+.landing-error{position:absolute;bottom:20px;left:15px;right:15px;text-align:center;color:#8d3f34;font-size:12px}
+.change-button{background:transparent;color:#65523f;border:1px solid #c7b69f}.change-button:hover{background:#f5eddf}
+@media(max-width:520px){.closed-book{min-height:550px}.cover-inner{min-height:522px;padding:38px 26px}.cover-inner h1{font-size:29px}.cover-inner form{margin-top:35px}.landing-error{bottom:10px}}

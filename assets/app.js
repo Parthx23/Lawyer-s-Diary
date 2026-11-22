@@ -1,5 +1,6 @@
 const API = 'api/entries.php';
 let entries = [];
+let currentLawyer = null;
 const $ = (selector) => document.querySelector(selector);
 const escapeHtml = (value) => String(value ?? '').replace(/[&<>"']/g, (char) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
 const localDate = (date) => `${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,'0')}-${String(date.getDate()).padStart(2,'0')}`;
@@ -35,8 +36,25 @@ function render() {
     <div class="next-item"><div class="next-date">${escapeHtml(prettyDate(entry.hearing_date))} &middot; ${escapeHtml(prettyTime(entry.hearing_time))}</div><div class="next-client">${escapeHtml(entry.client_name)}</div><div class="next-case">${escapeHtml(entry.case_title)} &middot; ${escapeHtml(entry.court_name)}</div></div>`).join('') : '<div class="next-empty">No upcoming hearings yet.</div>';
 }
 async function loadEntries() {
-  try { const response = await fetch(API); const data = await response.json(); if (!response.ok) throw Error(data.error); entries = data.entries; render(); }
-  catch { $('#entriesBody').innerHTML = '<tr><td colspan="5" class="empty-state">Could not load diary. Check the database connection.</td></tr>'; $('#nextHearings').innerHTML = '<div class="next-empty">Diary is not connected.</div>'; }
+  try {
+    const response = await fetch(`${API}?lawyer_id=${encodeURIComponent(currentLawyer.id)}`);
+    const data = await response.json();
+    if (!response.ok) throw Error(data.error || 'Could not load diary.');
+    entries = data.entries;
+    render();
+  } catch (error) {
+    $('#entriesBody').innerHTML = `<tr><td colspan="5" class="empty-state">${escapeHtml(error.message || 'Could not load diary.')}</td></tr>`;
+    $('#nextHearings').innerHTML = '<div class="next-empty">Could not load hearings.</div>';
+  }
+}
+async function openSelectedDiary(lawyer) {
+  currentLawyer = lawyer;
+  $('#currentLawyerName').textContent = lawyer.name;
+  $('#closedBook').classList.add('opening');
+  await new Promise((resolve) => setTimeout(resolve, 900));
+  $('#landing').hidden = true;
+  $('#workspace').hidden = false;
+  await loadEntries();
 }
 function openModal(entry = null) {
   const form = $('#entryForm'); form.reset(); form.elements.id.value = '';
@@ -55,6 +73,30 @@ $('#todayLabel').textContent = now.toLocaleDateString(undefined, {weekday:'short
 $('#dayNumber').textContent = now.getDate();
 $('#monthName').textContent = now.toLocaleDateString(undefined, {month:'long'});
 $('#weekdayName').textContent = now.toLocaleDateString(undefined, {weekday:'long'});
+$('#lawyerNameInput').focus();
+$('#lawyerForm').addEventListener('submit', async (event) => {
+  event.preventDefault();
+  const button = $('#openDiaryButton'); const errorBox = $('#lawyerError');
+  errorBox.textContent = ''; button.disabled = true; button.textContent = 'Opening...';
+  try {
+    const response = await fetch('api/lawyers.php', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({name:$('#lawyerNameInput').value.trim()})});
+    const data = await response.json();
+    if (!response.ok) throw Error(data.error || 'Could not open diary.');
+    await openSelectedDiary(data.lawyer);
+  } catch (error) {
+    errorBox.textContent = error.message || 'Could not open diary. Check the database setup.';
+    $('#closedBook').classList.remove('opening');
+    button.innerHTML = 'Open diary <span>&rarr;</span>';
+  } finally { button.disabled = false; }
+});
+$('#changeLawyerBtn').addEventListener('click', () => {
+  currentLawyer = null; entries = [];
+  $('#workspace').hidden = true; $('#landing').hidden = false;
+  $('#closedBook').classList.remove('opening');
+  $('#lawyerNameInput').value = ''; $('#lawyerError').textContent = '';
+  $('#openDiaryButton').innerHTML = 'Open diary <span>&rarr;</span>';
+  $('#lawyerNameInput').focus();
+});
 $('#addEntryBtn').addEventListener('click', () => openModal());
 $('#closeModal').addEventListener('click', closeModal); $('#cancelModal').addEventListener('click', closeModal);
 $('#modalBackdrop').addEventListener('click', (event) => { if (event.target === $('#modalBackdrop')) closeModal(); });
@@ -64,14 +106,14 @@ $('#entriesBody').addEventListener('click', async (event) => {
   const editButton = event.target.closest('[data-edit]'); const deleteButton = event.target.closest('[data-delete]');
   if (editButton) openModal(entries.find((entry) => entry.id == editButton.dataset.edit));
   if (deleteButton && confirm('Delete this hearing?')) {
-    const response = await fetch(API, {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({action:'delete', id:deleteButton.dataset.delete})});
+    const response = await fetch(API, {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({action:'delete', id:deleteButton.dataset.delete, lawyer_id:currentLawyer.id})});
     const data = await response.json(); if (!response.ok) return toast(data.error || 'Could not delete hearing.');
     toast(data.message); loadEntries();
   }
 });
 $('#entryForm').addEventListener('submit', async (event) => {
   event.preventDefault(); const form = event.currentTarget; const values = Object.fromEntries(new FormData(form));
-  values.action = values.id ? 'update' : 'create';
+  values.action = values.id ? 'update' : 'create'; values.lawyer_id = currentLawyer.id;
   const button = $('#saveButton'); button.disabled = true;
   try {
     const response = await fetch(API, {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(values)});
@@ -80,4 +122,3 @@ $('#entryForm').addEventListener('submit', async (event) => {
   } catch (error) { $('#formError').textContent = error.message; }
   finally { button.disabled = false; }
 });
-loadEntries();
